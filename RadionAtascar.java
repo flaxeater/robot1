@@ -2,6 +2,7 @@ package cmc;
 import robocode.*;
 import java.awt.Color;
 import robocode.util.Utils;
+import cmc.gun.*;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
@@ -10,7 +11,7 @@ import robocode.util.Utils;
  */
 public class RadionAtascar extends AdvancedRobot
 {
-	private double bulletPower = 3.0;
+	private Gun targeter =  new LinearTargeting(this);
 	/**
 	 * run: RadionAtascar's default behavior
 	 */
@@ -32,9 +33,6 @@ public class RadionAtascar extends AdvancedRobot
 		}
 	}
 	//Getters and Setters
-	public void setBulletPower(double p) {
-		bulletPower = p;
-	}
 	//Helper Functions
 	private void manageScanLock(ScannedRobotEvent e) {
 		out.println("SCANNED!!");
@@ -49,25 +47,7 @@ public class RadionAtascar extends AdvancedRobot
 		setTurnGunRightRadians(radarTurn);
 	}
 	private void manageFiringSolutions(ScannedRobotEvent e) {
-		double headOnBearing = getHeadingRadians() + e.getBearingRadians();
-		double distanceToEnemy = e.getDistance();
-		double enemyX = getX()+ distanceToEnemy * Math.sin(headOnBearing);
-		double enemyY = getY()+ distanceToEnemy * Math.cos(headOnBearing);
-		double myX = getX();
-		double myY = getY();
-		double distanceEastWest = Math.abs(myX - enemyX);
-		double angleUnderXAxis = myX > enemyX ? Math.acos(distanceEastWest/distanceToEnemy) : Math.asin(distanceEastWest/distanceToEnemy);
-out.println("angle under =" + angleUnderXAxis*180/Math.PI);
-		double angleOfEnemyVectorRelativeToHeadOnBearing = e.getHeadingRadians()+angleUnderXAxis;
-		out.println(" angle relative head on = " + angleOfEnemyVectorRelativeToHeadOnBearing * 180 / Math.PI);
-
-		//double insideRightAngle = 
-		double angleRatio = e.getVelocity() / Rules.getBulletSpeed(bulletPower);
-		double maximumEscapeAngle = Math.sin(e.getHeadingRadians() - headOnBearing);
-		double angleToImpact = Math.asin(angleRatio * maximumEscapeAngle);
-		double linearBearing = headOnBearing + angleToImpact;
-		setTurnGunRightRadians(Utils.normalRelativeAngle(linearBearing - getGunHeadingRadians()));
-		setFire(bulletPower);
+		targeter.handleTargeting(e);
 	}
 	//End Helper Functions
 	//Event Handlers
