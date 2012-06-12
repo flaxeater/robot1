@@ -9,7 +9,6 @@ public abstract class Gun {
 	protected double myX;
 	protected double myY;
 	protected double headOnBearing;
-	protected double distanceToEnemy;
 	protected double degreesToRadiansRatio = 360/(2*Math.PI);
 	protected double radiansToDegreesRatio = (2*Math.PI)/360;
 
@@ -26,14 +25,14 @@ public abstract class Gun {
 		setEnemyCoords(e);
 		setMyCoords();
 		setHeadOnBearing(e);
-		setDistanceToEnemy(e);
 	}
 
 
 	//concretions
 	public void setEnemyCoords(ScannedRobotEvent e) {
-		enemyX = p.getX()+ distanceToEnemy * Math.sin(headOnBearing);
-		enemyY = p.getY()+ distanceToEnemy * Math.cos(headOnBearing);
+		enemyX = p.getX()+ e.getDistance() * Math.sin(headOnBearing);
+		enemyY = p.getY()+ e.getDistance() * Math.cos(headOnBearing);
+		echo("My X = " + (int)p.getX() + " My Y = " + (int)p.getY() + " Enemy X,Y " + (int)enemyX + "," + (int)enemyY);
 	}
 	public void setMyCoords() {
 		myX = p.getX();
@@ -43,13 +42,12 @@ public abstract class Gun {
 		Figure out the angle towards the enemy
 	*/
 	public void setHeadOnBearing(ScannedRobotEvent e) {
-p.out.println("MY Heading " + p.getHeading());
-p.out.println("Enemy Bearing " + e.getBearing());
+		echo("My Heading " + p.getHeading());
+		echo("Enemy Bearing " + e.getBearing());
 		headOnBearing = p.getHeadingRadians() + e.getBearingRadians();
-//p.out.println("Head on Bearings Degrees " + Utils.normalAbsoluteAngle(headOnBearing)*radiansToDegreesRatio);
+		echo("Head On Bearing = " + Utils.normalAbsoluteAngleDegrees(p.getHeading() + e.getBearing()));
 	}
-	public void setDistanceToEnemy(ScannedRobotEvent e) {
-		distanceToEnemy = e.getDistance();
-//p.out.println("Distance To Enemy " + distanceToEnemy);
+	protected void echo(String m) {
+		p.out.println(m);
 	}
 }
