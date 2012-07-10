@@ -1,8 +1,11 @@
 package cmc.gun;
 import robocode.*;
 import robocode.util.Utils;
+
+//robot
+import cmc.RadionAtascar;
 public abstract class Gun {
-	protected AdvancedRobot p;
+	protected RadionAtascar p;
 	protected double bulletPower = 3.0;
 	protected double enemyX;
 	protected double enemyY;
@@ -12,7 +15,7 @@ public abstract class Gun {
 	protected double degreesToRadiansRatio = 360/(2*Math.PI);
 	protected double radiansToDegreesRatio = (2*Math.PI)/360;
 
-	public Gun(AdvancedRobot parent) {
+	public Gun(RadionAtascar parent) {
 		p = parent;
 	}
 	//Getters and Setters

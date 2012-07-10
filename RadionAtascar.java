@@ -1,8 +1,14 @@
 package cmc;
-import robocode.*;
+//std lib
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+//robocode
+import robocode.*;
 import robocode.util.Utils;
+//robot
 import cmc.gun.*;
+import cmc.shapes.*;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
@@ -11,7 +17,8 @@ import cmc.gun.*;
  */
 public class RadionAtascar extends AdvancedRobot
 {
-	private Gun targeter =  new LinearTargeting(this);
+	private Gun targeter =  new QuadraticLinearTargeting(this);
+  public ArrayList<Shape> shapes = new ArrayList<Shape>();
 	/**
 	 * run: RadionAtascar's default behavior
 	 */
@@ -49,6 +56,9 @@ public class RadionAtascar extends AdvancedRobot
 	private void manageFiringSolutions(ScannedRobotEvent e) {
 		targeter.handleTargeting(e);
 	}
+  public void addShape(Shape s) {
+    shapes.add(s);
+  }
 	//End Helper Functions
 	//Event Handlers
 
@@ -75,5 +85,11 @@ public class RadionAtascar extends AdvancedRobot
 		// Replace the next line with any behavior you would like
 		back(20);
 	}	
+  public void onPaint(Graphics2D g) {
+    //draw them
+    for (Shape s: shapes) {
+      s.draw(g);
+    }
+  }
 	//end Event Handlers
 }
