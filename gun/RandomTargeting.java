@@ -16,15 +16,13 @@ public class RandomTargeting extends Gun {
   double oldEnemyHeading;
 
   public RandomTargeting(RadionAtascar parent) {
-		super(parent);
+    super(parent);
     oldEnemyHeading = 0;
   }
 
   public void handleTargeting(ScannedRobotEvent e) {
     this.e = e;
-    setEnemyCoords(e);
     setMyCoords();
-    setHeadOnBearing(e);
     handleTargeting();
   }
   public void handleTargeting() {

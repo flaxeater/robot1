@@ -9,11 +9,10 @@ import cmc.RadionAtascar;
 public class QuadraticLinearTargeting extends Gun {
   ScannedRobotEvent e = null;
   public QuadraticLinearTargeting(RadionAtascar parent) {
-		super(parent);
+    super(parent);
   }
-	public void handleTargeting(ScannedRobotEvent e) {
+  public void handleTargeting(ScannedRobotEvent e) {
     this.e = e;
-    setEnemyCoords(e);
     setMyCoords();
     setHeadOnBearing(e);
     handleTargeting();

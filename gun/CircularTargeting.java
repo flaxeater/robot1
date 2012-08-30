@@ -16,35 +16,34 @@ public class CircularTargeting extends Gun {
   double oldEnemyHeading;
 
   public CircularTargeting(RadionAtascar parent) {
-		super(parent);
+    super(parent);
     oldEnemyHeading = 0;
   }
 
   public void handleTargeting(ScannedRobotEvent e) {
+    echo("HANDLE TARGETING CIRCULAR");
     this.e = e;
-    setEnemyCoords(e);
-    setMyCoords();
-    setHeadOnBearing(e);
+    super.handleTargeting(e);
     handleTargeting();
   }
   public void handleTargeting() {
     double bulletPower = Math.min(3.0,p.getEnergy());
-//    double myX = p.getX();
-//    double myY = p.getY();
     double absoluteBearing = p.getHeadingRadians() + e.getBearingRadians();
-//    double enemyX = getX() + e.getDistance() * Math.sin(absoluteBearing);
-//    double enemyY = getY() + e.getDistance() * Math.cos(absoluteBearing);
     double enemyHeading = e.getHeadingRadians();
     double enemyHeadingChange = enemyHeading - oldEnemyHeading;
     double enemyVelocity = e.getVelocity();
     oldEnemyHeading = enemyHeading;
-
     double deltaTime = 0;
     double battleFieldHeight = p.getBattleFieldHeight(), 
     battleFieldWidth = p.getBattleFieldWidth();
-    double predictedX = enemyX, predictedY = enemyY;
+    double predictedX = p.getRadar().getEnemyPosition().getX();
+    double predictedY = p.getRadar().getEnemyPosition().getY();
     while((++deltaTime) * (20.0 - 3.0 * bulletPower) < 
-           Point2D.Double.distance(myX, myY, predictedX, predictedY)) {
+           Point2D.Double.distance(
+            (double)myPosition.getX(), 
+            (double)myPosition.getY(), 
+            predictedX, 
+            predictedY)) {
       predictedX += Math.sin(enemyHeading) * enemyVelocity;
       predictedY += Math.cos(enemyHeading) * enemyVelocity;
       enemyHeading += enemyHeadingChange;
@@ -60,10 +59,13 @@ public class CircularTargeting extends Gun {
     double theta = Utils.normalAbsoluteAngle(Math.atan2(
     predictedX - p.getX(), predictedY - p.getY()));
 
-    p.setTurnRadarRightRadians(Utils.normalRelativeAngle(
-        absoluteBearing - p.getRadarHeadingRadians()));
-    p.setTurnGunRightRadians(Utils.normalRelativeAngle(
-        theta - p.getGunHeadingRadians()));
-    p.fire(3);
+    p.setTurnGunRightRadians(Utils.normalRelativeAngle( theta - p.getGunHeadingRadians()));
+    p.setFire(3);
+  }
+  public String toString() {
+    return "CircularTargeting";
+  }
+  public void echo(String m) {
+    p.out.println(m);
   }
 }

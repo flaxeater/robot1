@@ -9,6 +9,7 @@ import robocode.util.Utils;
 //robot
 import cmc.gun.*;
 import cmc.shapes.*;
+import cmc.radar.*;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
@@ -17,7 +18,14 @@ import cmc.shapes.*;
  */
 public class RadionAtascar extends AdvancedRobot
 {
-  private Gun targeter =  new RandomTargeting(this);
+  //CONSTANTS
+  public static final int DEBUG=1;
+  public static final int WARN=2;
+  public static final int ERROR=3;
+  public static final int VERBOSE=4;
+
+  private Gun targeter =  new VirtualGunTargeting(this);
+  private Radar radar = new Radar(this);
   public ArrayList<Shape> shapes = new ArrayList<Shape>();
   /**
    * run: RadionAtascar's default behavior
@@ -39,13 +47,7 @@ public class RadionAtascar extends AdvancedRobot
   //Helper Functions
   private void manageScanLock(ScannedRobotEvent e) {
     out.println("SCANNED!!");
-    //absolute angle to enemy
-    double angleToEnemy = getHeadingRadians() + e.getBearingRadians();
-    //get the angle the radar needs to turn to
-    double radarTurn = Utils.normalRelativeAngle(angleToEnemy - getRadarHeadingRadians());
-    double extraTurn = Math.min(Math.atan(36.0/e.getDistance()), Rules.RADAR_TURN_RATE_RADIANS);
-    radarTurn += (radarTurn < 0 ? -extraTurn : extraTurn);
-    setTurnRadarRightRadians(radarTurn);
+    radar.handleScan(e);
   }
   private void manageFiringSolutions(ScannedRobotEvent e) {
     targeter.handleTargeting(e);
@@ -69,8 +71,8 @@ public class RadionAtascar extends AdvancedRobot
    */
   public void onHitByBullet(HitByBulletEvent e) {
     // Replace the next line with any behavior you would like
-    turnLeft(90.0);
-    ahead(200);
+    setTurnLeft(90.0);
+    setAhead(200);
   }
   
   /**
@@ -78,7 +80,7 @@ public class RadionAtascar extends AdvancedRobot
    */
   public void onHitWall(HitWallEvent e) {
     // Replace the next line with any behavior you would like
-    back(200);
+    setBack(200);
   }  
   public void onPaint(Graphics2D g) {
     //draw them
@@ -87,4 +89,17 @@ public class RadionAtascar extends AdvancedRobot
     }
   }
   //end Event Handlers
+  //Getters and Setters
+  public Radar getRadar() {
+    return radar;
+  }
+  //UTILS
+  protected void echo(String m) {
+    echo(m,WARN);
+  }
+  protected void echo(String m, int level) {
+    if (level<=WARN) {
+      out.println(m);
+    }
+  }
 }

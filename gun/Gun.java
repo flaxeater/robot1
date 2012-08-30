@@ -1,4 +1,5 @@
 package cmc.gun;
+import java.awt.Point;
 import robocode.*;
 import robocode.util.Utils;
 
@@ -9,8 +10,9 @@ public abstract class Gun {
   protected double bulletPower = 3.0;
   protected double enemyX;
   protected double enemyY;
-  protected double myX;
-  protected double myY;
+//  protected double myX;
+//  protected double myY;
+  protected Point myPosition;
   protected double headOnBearing;
   protected double degreesToRadiansRatio = 360/(2*Math.PI);
   protected double radiansToDegreesRatio = (2*Math.PI)/360;
@@ -25,32 +27,30 @@ public abstract class Gun {
 
   //abstracts
   public void handleTargeting(ScannedRobotEvent e) {
-    setEnemyCoords(e);
+//    setEnemyCoords(e);
     setMyCoords();
     setHeadOnBearing(e);
   }
 
 
   //concretions
-  public void setEnemyCoords(ScannedRobotEvent e) {
-    enemyX = p.getX()+ e.getDistance() * Math.sin(headOnBearing);
-    enemyY = p.getY()+ e.getDistance() * Math.cos(headOnBearing);
-    echo("My X = " + (int)p.getX() + " My Y = " + (int)p.getY() + " Enemy X,Y " + (int)enemyX + "," + (int)enemyY);
-  }
   public void setMyCoords() {
-    myX = p.getX();
-    myY = p.getY();
+    myPosition = new Point((int)p.getX(), (int)p.getX());
+    echo("My position " + myPosition);
   }
   /**
     Figure out the angle towards the enemy
   */
   public void setHeadOnBearing(ScannedRobotEvent e) {
-//    echo("My Heading " + p.getHeading());
-//    echo("Enemy Bearing " + e.getBearing());
     headOnBearing = p.getHeadingRadians() + e.getBearingRadians();
-//    echo("Head On Bearing = " + Utils.normalAbsoluteAngleDegrees(p.getHeading() + e.getBearing()));
+  }
+  public double getHeadOnBearing() {
+    return p.getRadar().getHeadonBearing();
   }
   protected void echo(String m) {
     p.out.println(m);
+  }
+  public String toString() {
+    return "Abstract Gun";
   }
 }
