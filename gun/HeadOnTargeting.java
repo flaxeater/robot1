@@ -32,4 +32,7 @@ public class HeadOnTargeting extends Gun {
     p.setTurnGunRightRadians(turnRightRadians);
     p.setFire(bulletPower);
   }
+  public String toString() {
+    return "HeadOnTargeting";
+  }
 }

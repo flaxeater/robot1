@@ -11,13 +11,20 @@ public class QuadraticLinearTargeting extends Gun {
   public QuadraticLinearTargeting(RadionAtascar parent) {
     super(parent);
   }
-  public void handleTargeting(ScannedRobotEvent e) {
+  private void setupHandleTargeting(ScannedRobotEvent e) {
     this.e = e;
     setMyCoords();
     setHeadOnBearing(e);
-    handleTargeting();
   }
-  public void handleTargeting() {
+  public void handleTargeting(ScannedRobotEvent e) {
+    setupHandleTargeting(e);
+    handleTargeting(false);
+  }
+  public void handleTargetingAndFire(ScannedRobotEvent e) {
+    setupHandleTargeting(e);
+    handleTargeting(true);
+  }
+  private void handleTargeting(boolean fire) {
     final double FIREPOWER = 2;
     final double ROBOT_WIDTH = 16,ROBOT_HEIGHT = 16;
     // Variables prefixed with e- refer to enemy, b- refer to bullet and r- refer to robot
@@ -53,14 +60,20 @@ public class QuadraticLinearTargeting extends Gun {
         p.setTurnGunRightRadians(robocode.util.Utils.normalRelativeAngle(
             Math.atan2(endX - rX, endY - rY)
             - p.getGunHeadingRadians()));
-        p.setFire(FIREPOWER);
-        //set the sqaure to be drawn
-        p.addShape(new Square((int)endX-5,(int)endY+5,10,(int)t));
+        //
+        if (fire) {
+            p.setFire(FIREPOWER);
+            //set the sqaure to be drawn
+            p.addShape(new Square((int)endX-5,(int)endY+5,10,(int)t));
+        }
         
     }
   }
  
   private double limit(double value, double min, double max) {
       return Math.min(max, Math.max(min, value));
+  }
+  public String toString() {
+    return "QuadraticLinearTargeting";
   }
 }

@@ -31,6 +31,7 @@ public abstract class Gun {
     setMyCoords();
     setHeadOnBearing(e);
   }
+  public abstract void handleTargetingAndFire(ScannedRobotEvent e);
 
 
   //concretions

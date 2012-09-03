@@ -22,6 +22,7 @@ public class Radar {
     setHeadonBearings(e);
     //absolute angle to enemy
     scan(e);
+    checkForFiredEvent(e);
   }
   private void scan(ScannedRobotEvent e) {
     //get the angle the radar needs to turn to
@@ -47,5 +48,28 @@ public class Radar {
   }
   public Point getEnemyPosition() {
     return enemyPoint;
+  }
+
+  //the energy level will not be 500 so it's over
+  private static double enemyEnergy = -20;
+  private static boolean enemyFired = false;
+  private void checkForFiredEvent(ScannedRobotEvent e) {
+    double energy = e.getEnergy();
+    //initializtion check or something strange
+    if (enemyEnergy < 0 || energy > enemyEnergy) {
+        enemyEnergy = energy;
+    }
+    //bullet fired
+    double diff = enemyEnergy - energy;
+    if (enemyEnergy > energy &&  diff >= 0.1 && diff <= 3.0) {
+        p.out.println("FIRED");
+        enemyFired = true;
+    }
+    else {
+        enemyFired = false;
+    }
+  }
+  public boolean enemyFired() {
+    return enemyFired;
   }
 }

@@ -37,4 +37,7 @@ public class RandomTargeting extends Gun {
         absBearingToEnemy + firingAngle - p.getGunHeadingRadians()));
     p.fire(bulletPower);
   }
+  public String toString() {
+    return "RandomTargeting";
+  }
 }

@@ -16,34 +16,48 @@ import cmc.gun.*;
 
 public class VirtualGunTargeting extends Gun {
   ScannedRobotEvent e = null;
-  double oldEnemyHeading;
   private ArrayList<Gun> guns = new ArrayList<Gun>();
   private Random randomGenerator = new Random();
+  private double pastGunHeat = 0;
+  private Gun currentGun = null;
 
   public VirtualGunTargeting(RadionAtascar parent) {
     super(parent);
-    oldEnemyHeading = 0;
     //Add the guns
-    guns.add(new RandomTargeting(p));
+//    guns.add(new RandomTargeting(p));
     guns.add(new CircularTargeting(p));
     guns.add(new QuadraticLinearTargeting(p));
-    guns.add(new HeadOnTargeting(p));
-    guns.add(new HeadFakeTargeting(p));
+//    guns.add(new HeadOnTargeting(p));
   }
 
   public Gun getRandomGun() {
     int index = randomGenerator.nextInt(guns.size());
 //    return guns.get(index);
-    return guns.get(4);
+    return guns.get(0);
   }
 
+  public void handleTargetingAndFire(ScannedRobotEvent e) {
+    //this is here for the abstract
+  }
   public void handleTargeting(ScannedRobotEvent e) {
     this.e = e;
-//    setMyCoords();
-    handleTargeting();
+    if (currentGun == null) {
+        //set the gun
+        currentGun = getRandomGun();
+    }
+    if (p.getGunHeat() > 0) {//cannot fire
+        ///get the targeter to keep the turret on target
+        currentGun.handleTargeting(e);
+    }
+    if (p.getGunHeat() == 0) {
+        //now let the target fire
+        currentGun.handleTargetingAndFire(e);
+        //and tell this gun to select the next gun
+        currentGun = null;
+    }
+//    handleTargeting();
   }
   public void handleTargeting() {
-    p.out.println("VIRTUAL GUN");
     Gun gun = getRandomGun();
     gun.handleTargeting(e);
     p.out.println("GUN = "+gun);

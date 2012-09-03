@@ -20,13 +20,19 @@ public class CircularTargeting extends Gun {
     oldEnemyHeading = 0;
   }
 
-  public void handleTargeting(ScannedRobotEvent e) {
-    echo("HANDLE TARGETING CIRCULAR");
+  private void setupHandleTargeting(ScannedRobotEvent e) {
     this.e = e;
     super.handleTargeting(e);
-    handleTargeting();
   }
-  public void handleTargeting() {
+  public void handleTargeting(ScannedRobotEvent e) {
+    setupHandleTargeting(e);
+    handleTargeting(false);
+  }
+  public void handleTargetingAndFire(ScannedRobotEvent e) {
+    setupHandleTargeting(e);
+    handleTargeting(true);
+  }
+  private void handleTargeting(boolean fire) {
     double bulletPower = Math.min(3.0,p.getEnergy());
     double absoluteBearing = p.getHeadingRadians() + e.getBearingRadians();
     double enemyHeading = e.getHeadingRadians();
@@ -61,6 +67,7 @@ public class CircularTargeting extends Gun {
 
     p.setTurnGunRightRadians(Utils.normalRelativeAngle( theta - p.getGunHeadingRadians()));
     p.setFire(3);
+    p.addShape(new Square((int)predictedX-5,(int)predictedY+5,10,(int)deltaTime));
   }
   public String toString() {
     return "CircularTargeting";
