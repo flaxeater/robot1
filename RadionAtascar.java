@@ -10,6 +10,7 @@ import robocode.util.Utils;
 import cmc.gun.*;
 import cmc.shapes.*;
 import cmc.radar.*;
+import cmc.movement.*;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
@@ -27,13 +28,14 @@ public class RadionAtascar extends AdvancedRobot
   private Gun targeter =  new VirtualGunTargeting(this);
   private Radar radar = new Radar(this);
   public ArrayList<Shape> shapes = new ArrayList<Shape>();
+  private Movement mover = new Movement(this);
   /**
    * run: RadionAtascar's default behavior
    */
   public void run() {
+    mover.handleMovementWithoutEnemy();
     setColors(Color.red,Color.blue,Color.YELLOW); // body,gun,radar
     turnRadarRightRadians(Double.POSITIVE_INFINITY);
-
     // Robot main loop
     while(true) {
       // Replace the next 4 lines with any behavior you would like
@@ -64,6 +66,7 @@ public class RadionAtascar extends AdvancedRobot
   public void onScannedRobot(ScannedRobotEvent e) {
     manageScanLock(e);
     manageFiringSolutions(e);
+    mover.handleMovement(e);
   }
 
   /**
@@ -87,6 +90,7 @@ public class RadionAtascar extends AdvancedRobot
     for (Shape s: shapes) {
       s.draw(g);
     }
+    mover.onPaint(g);
   }
   //end Event Handlers
   //Getters and Setters

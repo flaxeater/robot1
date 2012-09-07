@@ -20,17 +20,23 @@ public class HeadOnTargeting extends Gun {
     oldEnemyHeading = 0;
   }
 
+  public void handleTargetingAndFire(ScannedRobotEvent e) {
+    this.e = e;
+    setMyCoords();
+    setHeadOnBearing(e);
+    handleTargeting(true);
+  }
   public void handleTargeting(ScannedRobotEvent e) {
     this.e = e;
     setMyCoords();
     setHeadOnBearing(e);
-    handleTargeting();
+    handleTargeting(false);
   }
-  public void handleTargeting() {
+  public void handleTargeting(boolean fire) {
     double absoluteBearing = p.getHeadingRadians() + e.getBearingRadians();
     double turnRightRadians = robocode.util.Utils.normalRelativeAngle(absoluteBearing - p.getGunHeadingRadians());
     p.setTurnGunRightRadians(turnRightRadians);
-    p.setFire(bulletPower);
+    if (fire) p.setFire(bulletPower);
   }
   public String toString() {
     return "HeadOnTargeting";

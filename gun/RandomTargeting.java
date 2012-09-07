@@ -20,12 +20,18 @@ public class RandomTargeting extends Gun {
     oldEnemyHeading = 0;
   }
 
+
+  public void handleTargetingAndFire(ScannedRobotEvent e) {
+    this.e = e;
+    setMyCoords();
+    handleTargeting(true);
+  }
   public void handleTargeting(ScannedRobotEvent e) {
     this.e = e;
     setMyCoords();
-    handleTargeting();
+    handleTargeting(false);
   }
-  public void handleTargeting() {
+  public void handleTargeting(boolean fire) {
     double randomGuessFactor = (Math.random() - .5) * 2;
     double bulletPower = 0.5;
     double maxEscapeAngle = Math.asin(8.0/(20 - (3 * bulletPower)));
@@ -35,7 +41,7 @@ public class RandomTargeting extends Gun {
     echo("bullet power = "+ bulletPower);
     p.setTurnGunRightRadians(Utils.normalRelativeAngle(
         absBearingToEnemy + firingAngle - p.getGunHeadingRadians()));
-    p.fire(bulletPower);
+    if (fire) p.fire(bulletPower);
   }
   public String toString() {
     return "RandomTargeting";

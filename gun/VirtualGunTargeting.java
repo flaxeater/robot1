@@ -24,16 +24,15 @@ public class VirtualGunTargeting extends Gun {
   public VirtualGunTargeting(RadionAtascar parent) {
     super(parent);
     //Add the guns
-//    guns.add(new RandomTargeting(p));
+    guns.add(new RandomTargeting(p));
     guns.add(new CircularTargeting(p));
     guns.add(new QuadraticLinearTargeting(p));
-//    guns.add(new HeadOnTargeting(p));
+    guns.add(new HeadOnTargeting(p));
   }
 
   public Gun getRandomGun() {
     int index = randomGenerator.nextInt(guns.size());
-//    return guns.get(index);
-    return guns.get(0);
+    return guns.get(index);
   }
 
   public void handleTargetingAndFire(ScannedRobotEvent e) {
@@ -55,7 +54,6 @@ public class VirtualGunTargeting extends Gun {
         //and tell this gun to select the next gun
         currentGun = null;
     }
-//    handleTargeting();
   }
   public void handleTargeting() {
     Gun gun = getRandomGun();
